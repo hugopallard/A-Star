@@ -22,8 +22,6 @@ public class main {
         gui.getResetGrid().setEnabled(true);
         gui.getStartAlgorithmButton().setEnabled(false);
         gui.getGenerateRandomGrid().setEnabled(false);
-        gui.getChooseMode().setEnabled(false);
-
         swingWorker.getSw1().execute();
         swingWorker = new MySwingWorker();
     }
@@ -53,4 +51,9 @@ public class main {
     public static AStar getAStar() {
         return AStar;
     }
+
+    public static void setSwingWorker(MySwingWorker swingWorker) {
+        main.swingWorker = swingWorker;
+    }
+
 }

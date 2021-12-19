@@ -2,6 +2,7 @@ package main;
 
 import gui.GuiKeyBinding;
 import gui.GuiMouseListener;
+import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.KeyStroke;
 
@@ -35,6 +36,8 @@ public class Node implements Comparable<Node> {
         this.ClosedList = false;
         this.OpenList = false;
         node.addMouseListener(new GuiMouseListener());
+        node.setBackground(Color.DARK_GRAY);
+        node.setBorderPainted(false);
         node.getInputMap().put(KeyStroke.getKeyStroke("S"), "allowDrawing");
         node.getActionMap().put("allowDrawing", keyBinding.getAllowDrawingAction());
         node.getInputMap().put(KeyStroke.getKeyStroke("D"), "stopDrawing");
@@ -95,7 +98,7 @@ public class Node implements Comparable<Node> {
     public void setParent(Node parent) {
         this.parent = parent;
     }
-    
+
     public int getF_cost() {
         return f_cost;
     }

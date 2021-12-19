@@ -15,7 +15,6 @@ public class AStar {
 
     private Node startNode;
     private Node endNode;
-    private Node currentNeighbour;
     private final ArrayList<Node> openList;
     private final ArrayList<Node> closedList;
     private final ArrayList<Node> listOfNodes;
@@ -53,20 +52,78 @@ public class AStar {
         main.getGui().paintStartNode(startNode);
 
         // generate an endNode whom is different from the startNode and paint it on the GUI
-        if (main.getGui().getChooseMode().isSelected() == false) {
-            int endNodeSelection = rd.nextInt(listOfNodes.size());
-            while (listOfNodes.get(endNodeSelection) == startNode) {
-                endNodeSelection = rd.nextInt(listOfNodes.size());
-            }
-            endNode = listOfNodes.get(endNodeSelection);
-            main.getGui().paintEndNode(endNode);
+        int endNodeSelection = rd.nextInt(listOfNodes.size());
+        while (listOfNodes.get(endNodeSelection) == startNode) {
+            endNodeSelection = rd.nextInt(listOfNodes.size());
         }
+        endNode = listOfNodes.get(endNodeSelection);
+        main.getGui().paintEndNode(endNode);
 
 //         generate all the obstacles randomly
         main.getGui().generateObstacles(startNode, endNode, rd);
 
     }
 
+    public boolean aStarAlgorithm(Node startingNode, Node endingNode, ArrayList<Node> openSet) {
+        System.out.println("----------------------------");
+        Node current = openSet.get(0);
+        for (int i = 0; i < openSet.size(); i++) {
+            if (openSet.get(i).getF_cost() < current.getF_cost() || (openSet.get(i).getF_cost() == current.getF_cost() && openSet.get(i).getH_cost() < current.getH_cost())) {
+                current = openSet.get(i);
+            }
+        }
+        // Create a local variable called current, the node which is currently evaluated
+        // the local variable is the node with the lowest f_cost, so the element 0 of our sorted openSet
+        openSet.remove(current);
+        current.setOpenList(false);
+        // Add the current node to the closedList
+        closedList.add(current);
+        current.setClosedList(true);
+        System.out.println(current == endingNode);
+        // If current node is equal to our endingNode, then the path has been found
+        if (current == endingNode) {
+            RetracePath(startingNode, endingNode);
+            return false;
+        } else {
+            // Create the neighbourS of the current node
+            neighbourCreation(current);
+            // Loop through the neighbours
+            for (int i = 0; i < neighbours.size(); i++) {
+                // Attribute to the field currentNeighbour the value of the neighbour from neighbours being evaluated
+                Node currentNeighbour = neighbours.get(i);
+                // If neighbour is not traversable of neighbour is in closedList we skip to the next iteration.
+                if (closedList.contains(currentNeighbour) || currentNeighbour.isObstacles() == true) {
+                    continue;
+                }
+                int new_path = current.getG_cost() + GetDistance(current, currentNeighbour);
+
+                // If the new path to the neighbour is shorter or neighbour is not in openSet then
+                if (new_path < currentNeighbour.getG_cost() || !openSet.contains(currentNeighbour)) {
+
+                    // I set the f_cost, g_cost and h_cost of the currentNeighbour
+                    currentNeighbour.setG_cost(new_path);
+                    currentNeighbour.setH_cost(GetDistance(currentNeighbour, endingNode));
+                    currentNeighbour.setF_cost(currentNeighbour.getG_cost() + currentNeighbour.getH_cost());
+                    currentNeighbour.setParent(current);
+                    // For visual
+//                    currentNeighbour.getNode().setText(String.valueOf(currentNeighbour.getF_cost() + "," + currentNeighbour.getG_cost() + "," + currentNeighbour.getH_cost()));
+                    if (!openSet.contains(currentNeighbour)) {
+                        openSet.add(currentNeighbour);
+                    }
+                    if (currentNeighbour != endingNode && "".equals(currentNeighbour.getNode().getText())) {
+                        currentNeighbour.getNode().setBackground(Color.green);
+                    }
+                    if (current != startingNode && "".equals(current.getNode().getText())) {
+                        current.getNode().setBackground(Color.yellow);
+                    }
+
+                }
+            }
+            neighbours.clear();
+            return true;
+        }
+    }
+    
     public boolean aStarAlgorithm() {
         // Order the openList
 
@@ -95,7 +152,7 @@ public class AStar {
             // Loop through the neighbours
             for (int i = 0; i < neighbours.size(); i++) {
                 // Attribute to the field currentNeighbour the value of the neighbour from neighbours being evaluated
-                currentNeighbour = neighbours.get(i);
+                Node currentNeighbour = neighbours.get(i);
                 // If neighbour is not traversable of neighbour is in closedList we skip to the next iteration.
                 if (closedList.contains(currentNeighbour) || currentNeighbour.isObstacles() == true) {
                     continue;
@@ -212,10 +269,6 @@ public class AStar {
 
     public ArrayList<Node> getNeighbours() {
         return neighbours;
-    }
-
-    public Node getCurrentNeighbour() {
-        return currentNeighbour;
     }
 
     public ArrayList<Node> getListOfParent() {

@@ -47,27 +47,17 @@ public class GuiMouseListener implements MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getSource() == main.getGui().getStartAlgorithmButton() && main.getGui().getStartAlgorithmButton().isEnabled()) {
-            if (main.getSwingWorker().getAStarList().isEmpty() == false && main.getGui().getChooseMode().isSelected()) {
-                main.start();
-            } else if (main.getGui().getChooseMode().isSelected() == false && main.getGui().getGenerateRandomGrid().isEnabled() == false) {
-                main.start();
-                System.out.println("coucou");
-            }
-        }
-
-        if (e.getSource() == main.getGui().getGenerateRandomGrid() && main.getGui().getGenerateRandomGrid().isEnabled() && main.getGui().getChooseMode().isSelected() == false) {
+            main.start();
+        } else if (e.getSource() == main.getGui().getGenerateRandomGrid() && main.getGui().getGenerateRandomGrid().isEnabled()) {
             main.getSwingWorker().setAStar(new AStar());
             if (main.getSwingWorker().getAStar().getStartNode() == null && main.getSwingWorker().getAStar().getEndNode() == null) {
                 main.getSwingWorker().getAStar().generateRandomGrid();
                 main.getGui().getResetGrid().setEnabled(true);
                 main.getGui().getGenerateRandomGrid().setEnabled(false);
             }
-        }
-
-        if (e.getSource() == main.getGui().getResetGrid() && main.getGui().getResetGrid().isEnabled()) {
+        } else if (e.getSource() == main.getGui().getResetGrid() && main.getGui().getResetGrid().isEnabled()) {
             // Reset differents parameters to keep the validty of our code
             for (int i = 0; i < main.getSwingWorker().getAStarList().size(); i++) {
-                main.getSwingWorker().getAStarList().get(i).getClosedList().clear();
                 main.getSwingWorker().getAStarList().get(i).getListOfNodes().clear();
                 main.getSwingWorker().getAStarList().get(i).getNeighbours().clear();
                 main.getSwingWorker().getAStarList().get(i).getOpenList().clear();
@@ -87,36 +77,33 @@ public class GuiMouseListener implements MouseListener {
             main.getGui().getGenerateRandomGrid().setEnabled(true);
             main.getGui().getStartAlgorithmButton().setEnabled(true);
             main.getGui().getWindowMenu().setEnabled(true);
-            main.getGui().getChooseMode().setEnabled(true);
-            main.getGui().getChooseMode().setSelected(false);
             main.getGui().getGui().repaint();
             main.getGui().createNodes(main.getGui().getMatrixSize());
             main.getGui().getGui().revalidate();
             main.getSwingWorker().setRunAlgo(true);
-        }
-        // Iterate trough all the buttons
-        for (int i = 0; i < main.getGui().getListOfAll().size(); i++) {
-            if (main.getGui().getChooseStartPos().isSelected() && e.getSource() == main.getGui().getListOfAll().get(i).getNode()) {
-                // Generate the startNode and add it to the openList and paint it on the GUI
-                for (int j = 0; j < main.getSwingWorker().getAStarList().size(); j++) {
-                    main.getSwingWorker().getAStarList().get(j).setStartNode(main.getGui().getListOfAll().get(i));
-                    main.getSwingWorker().getAStarList().get(j).getOpenList().add(main.getSwingWorker().getAStarList().get(j).getStartNode());
-                    main.getSwingWorker().getAStarList().get(j).getStartNode().setOpenList(true);
-                    main.getGui().paintStartNode(main.getSwingWorker().getAStarList().get(j).getStartNode());
+        } else {
+            // Iterate trough all the buttons
+            for (int i = 0; i < main.getGui().getListOfAll().size(); i++) {
+                if (main.getGui().getChooseStartPos().isSelected() && e.getSource() == main.getGui().getListOfAll().get(i).getNode()) {
+                    if (main.getSwingWorker().getAStarList().isEmpty()) {
+                        JOptionPane.showMessageDialog(main.getGui().getGui(), "First add the end nodes", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        // Generate the startNode and add it to the openList and paint it on the GUI
+                        main.getSwingWorker().getAStarList().get(0).setStartNode(main.getGui().getListOfAll().get(i));
+                        main.getSwingWorker().getOpenSet().add(main.getSwingWorker().getAStarList().get(0).getStartNode());
+                        main.getSwingWorker().getAStarList().get(0).getStartNode().setOpenList(true);
+                        main.getGui().paintStartNode(main.getSwingWorker().getAStarList().get(0).getStartNode());
+                    }
                 }
-                if (main.getSwingWorker().getAStarList().isEmpty()) {
-                    JOptionPane.showMessageDialog(main.getGui().getGui(), "First add the end nodes", "Info", JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-            if (main.getGui().getChooseEndPos().isSelected() && e.getSource() == main.getGui().getListOfAll().get(i).getNode()) {
-                main.getSwingWorker().setAStar(new AStar(main.getGui().getListOfAll().get(i)));
-                main.getSwingWorker().getAStarList().add(main.getSwingWorker().getAStar());
-                main.getSwingWorker().getRunAlgoList().add(true);
-                main.getGui().paintEndNode(main.getGui().getListOfAll().get(i));
-                int endNodeCount = main.getEndNodeCount() + 1;
-                main.setEndNodeCount(endNodeCount);
-                System.out.println(main.getEndNodeCount());
+                if (main.getGui().getChooseEndPos().isSelected() && e.getSource() == main.getGui().getListOfAll().get(i).getNode()) {
+                    main.getSwingWorker().getAStarList().add(new AStar(main.getGui().getListOfAll().get(i)));
+                    main.getSwingWorker().getRunAlgoList().add(true);
+                    main.getGui().paintEndNode(main.getGui().getListOfAll().get(i));
+                    int endNodeCount = main.getEndNodeCount() + 1;
+                    main.setEndNodeCount(endNodeCount);
+                    System.out.println(main.getEndNodeCount());
 
+                }
             }
         }
     }

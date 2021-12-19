@@ -48,7 +48,6 @@ public class GUI {
     private JRadioButton chooseStartPos;
     private JRadioButton chooseEndPos;
     private JRadioButton eraseObstacles;
-    private JCheckBox chooseMode;
     private ButtonGroup optionGroup;
     private JSlider widthSelectorSlider;
     private JMenuBar menuBar;
@@ -179,11 +178,6 @@ public class GUI {
         chooseEndPos.setFocusPainted(false);
         chooseEndPos.setForeground(Color.WHITE);
 
-        chooseMode = new JCheckBox("Multiple End Node");
-        chooseMode.setBackground(Color.DARK_GRAY);
-        chooseMode.setFocusPainted(false);
-        chooseMode.setForeground(Color.WHITE);
-
         optionGroup = new ButtonGroup();
         optionGroup.add(this.generateObstacles);
         optionGroup.add(this.eraseObstacles);
@@ -194,7 +188,6 @@ public class GUI {
         selectPanel.add(eraseObstacles);
         selectPanel.add(chooseStartPos);
         selectPanel.add(chooseEndPos);
-        selectPanel.add(chooseMode);
 
         actionPanel = new JPanel();
         actionPanel.setBackground(Color.DARK_GRAY);
@@ -434,10 +427,6 @@ public class GUI {
 
     public JMenu getWindowMenu() {
         return windowMenu;
-    }
-
-    public JCheckBox getChooseMode() {
-        return chooseMode;
     }
 
 }
