@@ -14,22 +14,10 @@ public class GuiMenuBarListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getSource() == main.getGui().getSaveItem()) {
-
-        }
-        if (e.getSource() == main.getGui().getLoadItem()) {
-
-        }
         if (e.getSource() == main.getGui().getExitItem()) {
             main.getGui().getGui().setVisible(false);
             main.getGui().getGui().dispose();
             System.exit(0);
-
-        }
-        if (e.getSource() == main.getGui().getStartRecord()) {
-
-        }
-        if (e.getSource() == main.getGui().getStopRecord()) {
 
         }
         if (e.getSource() == main.getGui().getChangeMatrixSize()) {
@@ -38,7 +26,7 @@ public class GuiMenuBarListener implements ActionListener {
                 main.getGui().getGenerateRandomGrid().setEnabled(false);
                 int newGridSize = Integer.parseInt(JOptionPane.showInputDialog(main.getGui().getGui(), "Enter the new grid size:", main.getGui().getMatrixSize()));
                 main.getGui().setMatrixSize(newGridSize);
-                
+
                 main.getGui().getContentPanel().removeAll();
                 main.getGui().getGui().repaint();
                 main.getGui().createNodes(newGridSize);
