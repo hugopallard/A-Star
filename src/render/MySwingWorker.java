@@ -67,7 +67,6 @@ public class MySwingWorker {
                     JOptionPane.showMessageDialog(main.getGui().getGui(), "Path has been found !", "Info", JOptionPane.PLAIN_MESSAGE);
                 } catch (IndexOutOfBoundsException d) {
                     JOptionPane.showMessageDialog(main.getGui().getGui(), "Path not found, please reset the grid", "Warning", JOptionPane.WARNING_MESSAGE);
-                } finally {
                 }
                 return null;
             }
