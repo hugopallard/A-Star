@@ -54,11 +54,9 @@ public class MySwingWorker {
                                 AStarList.get(cpt).setStartNode(startNode);
                                 openSet.add(startNode);
                                 AStarList.get(cpt).getStartNode().setOpenList(true);
-                                startNode.getNode().setBackground(Color.PINK);
                                 cpt++;
                                 if (cpt < AStarList.size()) {
                                     endNode = AStarList.get(cpt).getEndNode();
-                                    endNode.getNode().setBackground(Color.ORANGE);
                                 }
                             }
                         } catch (InterruptedException ex) {

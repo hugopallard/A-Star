@@ -110,12 +110,12 @@ public class AStar {
                     if (!openSet.contains(currentNeighbour)) {
                         openSet.add(currentNeighbour);
                     }
-                    if (currentNeighbour != endingNode && "".equals(currentNeighbour.getNode().getText())) {
-                        currentNeighbour.getNode().setBackground(Color.green);
-                    }
-                    if (current != startingNode && "".equals(current.getNode().getText())) {
-                        current.getNode().setBackground(Color.yellow);
-                    }
+//                    if (currentNeighbour != endingNode && "".equals(currentNeighbour.getNode().getText())) {
+//                        currentNeighbour.getNode().setBackground(Color.green);
+//                    }
+//                    if (current != startingNode && "".equals(current.getNode().getText())) {
+//                        current.getNode().setBackground(Color.yellow);
+//                    }
 
                 }
             }
@@ -203,7 +203,7 @@ public class AStar {
             if ("".equals(pathMember.getText())) {
                 try {
                     Thread.sleep((long) (0.05 * 1000));
-                    pathMember.setBackground(Color.CYAN);
+                    pathMember.setBackground(new Color(64,43,25));
 
                 } catch (InterruptedException ex) {
                     Logger.getLogger(AStar.class.getName()).log(Level.SEVERE, null, ex);

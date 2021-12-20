@@ -260,19 +260,18 @@ public class GUI {
     }
 
     public void paintStartNode(Node startButton) {
-        startButton.getNode().setBackground(Color.red);
+        startButton.getNode().setBackground(Color.CYAN);
     }
 
     public void paintEndNode(Node endButton) {
-        endButton.getNode().setBackground(Color.blue);
-        endButton.getNode().setForeground(Color.WHITE);
+        endButton.getNode().setBackground(Color.WHITE);
         endButton.getNode().setFocusPainted(false);
         endButton.getNode().setText(String.valueOf(main.getEndNodeCount()));
     }
 
     public void paintObstacles(Node obstacle, int width) {
         if (width == 1) {
-            obstacle.getNode().setBackground(Color.black);
+            obstacle.getNode().setBackground(new Color(165,13,51));
         }
         for (int i = 0; i < this.listOfAll.size(); i++) {
             Node currentNode = main.getGui().getListOfAll().get(i);
@@ -280,9 +279,9 @@ public class GUI {
             int potentialCol = Math.abs(obstacle.getColumn() - currentNode.getColumn());
 
             if (width == 2 && ((potentialRow == 1 && potentialCol == 0) || (potentialRow == 0 && potentialCol == 1))) {
-                currentNode.getNode().setBackground(Color.black);
+                currentNode.getNode().setBackground(new Color(165,13,51));
                 currentNode.setObstacles(true);
-                obstacle.getNode().setBackground(Color.black);
+                obstacle.getNode().setBackground(new Color(165,13,51));
             }
 
             if (width == 3 && ((potentialRow == 2 && potentialCol == 0)
@@ -291,8 +290,8 @@ public class GUI {
                     || (potentialRow == 0 && potentialCol == 1)
                     || (potentialRow == 1 && potentialCol == 1))) {
                 currentNode.setObstacles(true);
-                currentNode.getNode().setBackground(Color.black);
-                obstacle.getNode().setBackground(Color.black);
+                currentNode.getNode().setBackground(new Color(165,13,51));
+                obstacle.getNode().setBackground(new Color(165,13,51));
             }
         }
     }

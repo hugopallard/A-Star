@@ -36,7 +36,7 @@ public class Node implements Comparable<Node> {
         this.ClosedList = false;
         this.OpenList = false;
         node.addMouseListener(new GuiMouseListener());
-        node.setBackground(Color.DARK_GRAY);
+        node.setBackground(new Color(56,116,60));
         node.setBorderPainted(false);
         node.getInputMap().put(KeyStroke.getKeyStroke("S"), "allowDrawing");
         node.getActionMap().put("allowDrawing", keyBinding.getAllowDrawingAction());
