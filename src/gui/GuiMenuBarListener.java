@@ -5,10 +5,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import main.main;
 
-/**
- *
- * @author hugop
- */
 public class GuiMenuBarListener implements ActionListener {
 
     @Override
@@ -18,7 +14,14 @@ public class GuiMenuBarListener implements ActionListener {
             main.getGui().getGui().setVisible(false);
             main.getGui().getGui().dispose();
             System.exit(0);
-
+        }
+        if (e.getSource() == main.getGui().getShowSteps()) {
+            int reply = JOptionPane.showConfirmDialog(null, "Show the algorithms steps ?", "Question", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                main.getSwingWorker().setShowAlgorithmSteps(true);
+            } else {
+                main.getSwingWorker().setShowAlgorithmSteps(false);
+            }
         }
         if (e.getSource() == main.getGui().getChangeMatrixSize()) {
             try {
@@ -26,7 +29,6 @@ public class GuiMenuBarListener implements ActionListener {
                 main.getGui().getGenerateRandomGrid().setEnabled(false);
                 int newGridSize = Integer.parseInt(JOptionPane.showInputDialog(main.getGui().getGui(), "Enter the new grid size:", main.getGui().getMatrixSize()));
                 main.getGui().setMatrixSize(newGridSize);
-
                 main.getGui().getContentPanel().removeAll();
                 main.getGui().getGui().repaint();
                 main.getGui().createNodes(newGridSize);
@@ -43,5 +45,4 @@ public class GuiMenuBarListener implements ActionListener {
                     + "To start drawing again, click on the grid, then press the d key", "Info", JOptionPane.INFORMATION_MESSAGE);
         }
     }
-
 }

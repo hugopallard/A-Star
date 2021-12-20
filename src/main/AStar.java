@@ -48,7 +48,6 @@ public class AStar {
         int startNodeSelection = rd.nextInt(listOfNodes.size());
         startNode = listOfNodes.get(startNodeSelection);
         openList.add(startNode);
-        startNode.setOpenList(true);
         main.getGui().paintStartNode(startNode);
 
         // generate an endNode whom is different from the startNode and paint it on the GUI
@@ -64,7 +63,7 @@ public class AStar {
 
     }
 
-    public boolean aStarAlgorithm(Node startingNode, Node endingNode, ArrayList<Node> openSet) {
+    public boolean aStarAlgorithm(Node startingNode, Node endingNode, ArrayList<Node> openSet, boolean showAlgorithmSteps) {
         System.out.println("----------------------------");
         Node current = openSet.get(0);
         for (int i = 0; i < openSet.size(); i++) {
@@ -75,11 +74,10 @@ public class AStar {
         // Create a local variable called current, the node which is currently evaluated
         // the local variable is the node with the lowest f_cost, so the element 0 of our sorted openSet
         openSet.remove(current);
-        current.setOpenList(false);
         // Add the current node to the closedList
         closedList.add(current);
-        current.setClosedList(true);
-        System.out.println(current == endingNode);
+        System.out.println(endNode.getRow() + "," + endNode.getColumn());
+        //System.out.println(current == endingNode);
         // If current node is equal to our endingNode, then the path has been found
         if (current == endingNode) {
             RetracePath(startingNode, endingNode);
@@ -110,21 +108,21 @@ public class AStar {
                     if (!openSet.contains(currentNeighbour)) {
                         openSet.add(currentNeighbour);
                     }
-//                    if (currentNeighbour != endingNode && "".equals(currentNeighbour.getNode().getText())) {
-//                        currentNeighbour.getNode().setBackground(Color.green);
-//                    }
-//                    if (current != startingNode && "".equals(current.getNode().getText())) {
-//                        current.getNode().setBackground(Color.yellow);
-//                    }
+                    if (showAlgorithmSteps && currentNeighbour != endingNode && current != endingNode && "".equals(currentNeighbour.getNode().getText())) {
+                        currentNeighbour.getNode().setBackground(Color.green);
+                    }
+                    if (showAlgorithmSteps && currentNeighbour != endingNode && current != startingNode && "".equals(current.getNode().getText())) {
+                        current.getNode().setBackground(Color.yellow);
+                    }
 
                 }
             }
-            neighbours.clear();
+
             return true;
         }
     }
-    
-    public boolean aStarAlgorithm() {
+
+    public boolean aStarAlgorithm(boolean showAlgorithmSteps) {
         // Order the openList
 
         System.out.println("----------------------------");
@@ -137,10 +135,8 @@ public class AStar {
             }
         }
         openList.remove(current);
-        current.setOpenList(false);
         // Add the current node to the closedList
         closedList.add(current);
-        current.setClosedList(true);
         System.out.println(current == endNode);
         // If current node is equal to our endNode, then the path has been found
         if (current == endNode) {
@@ -172,10 +168,10 @@ public class AStar {
                     if (!openList.contains(currentNeighbour)) {
                         openList.add(currentNeighbour);
                     }
-                    if (currentNeighbour != endNode && "".equals(currentNeighbour.getNode().getText())) {
+                    if (showAlgorithmSteps && currentNeighbour != endNode && "".equals(currentNeighbour.getNode().getText())) {
                         currentNeighbour.getNode().setBackground(Color.green);
                     }
-                    if (current != startNode && "".equals(current.getNode().getText())) {
+                    if (showAlgorithmSteps && current != startNode && "".equals(current.getNode().getText())) {
                         current.getNode().setBackground(Color.yellow);
                     }
 
@@ -201,13 +197,7 @@ public class AStar {
             pathMember = reversePath.get(i).getNode();
 
             if ("".equals(pathMember.getText())) {
-                try {
-                    Thread.sleep((long) (0.05 * 1000));
-                    pathMember.setBackground(new Color(64,43,25));
-
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(AStar.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                pathMember.setBackground(Color.CYAN);
             }
             if (endNode.getNode().getText().equals(pathMember.getText()) == false) {
                 pathMember.setText(endNode.getNode().getText() + "," + pathMember.getText());

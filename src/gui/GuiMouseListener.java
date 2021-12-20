@@ -14,9 +14,8 @@ import main.main;
 public class GuiMouseListener implements MouseListener {
 
     private Node node;
-
-    public GuiMouseListener() {
-    }
+    private Node clickedNode;
+    private AStar currentAStarInstance;
 
     @Override
     public void mouseEntered(MouseEvent e) {
@@ -41,28 +40,23 @@ public class GuiMouseListener implements MouseListener {
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
-    }
-
-    @Override
     public void mousePressed(MouseEvent e) {
         if (e.getSource() == main.getGui().getStartAlgorithmButton() && main.getGui().getStartAlgorithmButton().isEnabled()) {
             main.start();
         } else if (e.getSource() == main.getGui().getGenerateRandomGrid() && main.getGui().getGenerateRandomGrid().isEnabled()) {
             main.getSwingWorker().setAStar(new AStar());
-            if (main.getSwingWorker().getAStar().getStartNode() == null && main.getSwingWorker().getAStar().getEndNode() == null) {
-                main.getSwingWorker().getAStar().generateRandomGrid();
-                main.getGui().getResetGrid().setEnabled(true);
-                main.getGui().getGenerateRandomGrid().setEnabled(false);
-            }
+            main.getSwingWorker().getAStar().generateRandomGrid();
+            main.getGui().getResetGrid().setEnabled(true);
+            main.getGui().getGenerateRandomGrid().setEnabled(false);
         } else if (e.getSource() == main.getGui().getResetGrid() && main.getGui().getResetGrid().isEnabled()) {
             // Reset differents parameters to keep the validty of our code
             for (int i = 0; i < main.getSwingWorker().getAStarList().size(); i++) {
-                main.getSwingWorker().getAStarList().get(i).getListOfNodes().clear();
-                main.getSwingWorker().getAStarList().get(i).getNeighbours().clear();
-                main.getSwingWorker().getAStarList().get(i).getOpenList().clear();
-                main.getSwingWorker().getAStarList().get(i).setEndNode(null);
-                main.getSwingWorker().getAStarList().get(i).setStartNode(null);
+                currentAStarInstance = main.getSwingWorker().getAStarList().get(i);
+                currentAStarInstance.getListOfNodes().clear();
+                currentAStarInstance.getNeighbours().clear();
+                currentAStarInstance.getOpenList().clear();
+                currentAStarInstance.setEndNode(null);
+                currentAStarInstance.setStartNode(null);
             }
             main.getSwingWorker().getAStarList().clear();
             main.getSwingWorker().getRunAlgoList().clear();
@@ -84,21 +78,21 @@ public class GuiMouseListener implements MouseListener {
         } else {
             // Iterate trough all the buttons
             for (int i = 0; i < main.getGui().getListOfAll().size(); i++) {
-                if (main.getGui().getChooseStartPos().isSelected() && e.getSource() == main.getGui().getListOfAll().get(i).getNode()) {
+                clickedNode = main.getGui().getListOfAll().get(i);
+                if (main.getGui().getChooseStartPos().isSelected() && e.getSource() == clickedNode.getNode()) {
                     if (main.getSwingWorker().getAStarList().isEmpty()) {
                         JOptionPane.showMessageDialog(main.getGui().getGui(), "First add the end nodes", "Info", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         // Generate the startNode and add it to the openList and paint it on the GUI
-                        main.getSwingWorker().getAStarList().get(0).setStartNode(main.getGui().getListOfAll().get(i));
-                        main.getSwingWorker().getOpenSet().add(main.getSwingWorker().getAStarList().get(0).getStartNode());
-                        main.getSwingWorker().getAStarList().get(0).getStartNode().setOpenList(true);
+                        main.getSwingWorker().getAStarList().get(0).setStartNode(clickedNode);
+                        main.getSwingWorker().getOpenSet().add(clickedNode);
                         main.getGui().paintStartNode(main.getSwingWorker().getAStarList().get(0).getStartNode());
                     }
                 }
-                if (main.getGui().getChooseEndPos().isSelected() && e.getSource() == main.getGui().getListOfAll().get(i).getNode()) {
-                    main.getSwingWorker().getAStarList().add(new AStar(main.getGui().getListOfAll().get(i)));
+                if (main.getGui().getChooseEndPos().isSelected() && e.getSource() == clickedNode.getNode()) {
+                    main.getSwingWorker().getAStarList().add(new AStar(clickedNode));
                     main.getSwingWorker().getRunAlgoList().add(true);
-                    main.getGui().paintEndNode(main.getGui().getListOfAll().get(i));
+                    main.getGui().paintEndNode(clickedNode);
                     int endNodeCount = main.getEndNodeCount() + 1;
                     main.setEndNodeCount(endNodeCount);
                     System.out.println(main.getEndNodeCount());
@@ -114,5 +108,9 @@ public class GuiMouseListener implements MouseListener {
 
     @Override
     public void mouseExited(MouseEvent e) {
+    }
+    
+    @Override
+    public void mouseClicked(MouseEvent e) {
     }
 }

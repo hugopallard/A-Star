@@ -6,21 +6,15 @@ import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.KeyStroke;
 
-/**
- *
- * @author hugop
- */
 public class Node implements Comparable<Node> {
 
     private final JButton node;
     private int f_cost;
     private int g_cost;
     private int h_cost;
-    private final int row;
-    private final int column;
+    private int row;
+    private int column;
     private boolean Obstacles;
-    private boolean ClosedList;
-    private boolean OpenList;
     private final GuiKeyBinding keyBinding;
     private Node parent;
 
@@ -33,10 +27,8 @@ public class Node implements Comparable<Node> {
         this.row = row;
         this.column = column;
         this.Obstacles = false;
-        this.ClosedList = false;
-        this.OpenList = false;
         node.addMouseListener(new GuiMouseListener());
-        node.setBackground(new Color(56,116,60));
+        node.setBackground(Color.WHITE);
         node.setBorderPainted(false);
         node.getInputMap().put(KeyStroke.getKeyStroke("S"), "allowDrawing");
         node.getActionMap().put("allowDrawing", keyBinding.getAllowDrawingAction());
@@ -65,22 +57,6 @@ public class Node implements Comparable<Node> {
 
     public void setObstacles(boolean Obstacles) {
         this.Obstacles = Obstacles;
-    }
-
-    public boolean isClosedList() {
-        return ClosedList;
-    }
-
-    public void setClosedList(boolean ClosedList) {
-        this.ClosedList = ClosedList;
-    }
-
-    public boolean isOpenList() {
-        return OpenList;
-    }
-
-    public void setOpenList(boolean OpenList) {
-        this.OpenList = OpenList;
     }
 
     public int getRow() {
@@ -123,4 +99,12 @@ public class Node implements Comparable<Node> {
         this.h_cost = h_cost;
     }
 
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
+    
 }

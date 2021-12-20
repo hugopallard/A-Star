@@ -1,11 +1,9 @@
 package render;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import main.AStar;
@@ -24,11 +22,13 @@ public class MySwingWorker {
     private final SwingWorker sw1;
     private Node startNode;
     private Node endNode;
+    private boolean showAlgorithmSteps;
 
     public MySwingWorker() {
         AStarList = new ArrayList<>();
         runAlgoList = new ArrayList<>();
         openSet = new ArrayList<>();
+        showAlgorithmSteps = false;
         this.sw1 = new SwingWorker() {
 
             @Override
@@ -36,47 +36,26 @@ public class MySwingWorker {
                 // define what thread will do here
                 try {
                     start = System.nanoTime();
-                    System.out.println("Nombre d'instance: " + AStarList.size());
-                    System.out.println("Taille runAlgoList: " + runAlgoList.size());
                     int cpt = 0;
                     while ((Collections.frequency(runAlgoList, false) == runAlgoList.size()) == false) {
-                        try {
-                            Thread.sleep((long) (0.01 * 1000));
-                            endNode = AStarList.get(cpt).getEndNode();
-                            runAlgoList.set(cpt, AStarList.get(cpt).aStarAlgorithm(startNode, endNode, openSet));
-                            // We give a maximum time for the algorithm to find a path,
-                            // It takes 0.15 sec for i to go from 0 to 1;
-                            // So 0.15*100 for i to reach 15.xxx sec
-                            // Safe switch is around 15 sec before stopping purposefully the program
-                            if (runAlgoList.get(cpt) == false) {
-                                openSet.clear();
-                                startNode = AStarList.get(cpt).getEndNode();
-                                AStarList.get(cpt).setStartNode(startNode);
-                                openSet.add(startNode);
-                                AStarList.get(cpt).getStartNode().setOpenList(true);
-                                cpt++;
-                                if (cpt < AStarList.size()) {
-                                    endNode = AStarList.get(cpt).getEndNode();
-                                }
+                        endNode = AStarList.get(cpt).getEndNode();
+                        runAlgoList.set(cpt, AStarList.get(cpt).aStarAlgorithm(startNode, endNode, openSet, showAlgorithmSteps));
+
+                        if (runAlgoList.get(cpt) == false) {
+                            openSet.clear();
+                            startNode = AStarList.get(cpt).getEndNode();
+                            AStarList.get(cpt).setStartNode(startNode);
+                            openSet.add(startNode);
+                            cpt++;
+                            if (cpt < AStarList.size()) {
+                                endNode = AStarList.get(cpt).getEndNode();
                             }
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(AStar.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         runAlgo = false;
                     }
                     while (runAlgo == true) {
-                        try {
-                            Thread.sleep((long) (0.01 * 1000));
-                            runAlgo = AStar.aStarAlgorithm();
-                            // We give a maximum time for the algorithm to find a path,
-                            // It takes 0.15 sec for i to go from 0 to 1;
-                            // So 0.15*100 for i to reach 15.xxx sec
-                            // Safe switch is around 15 sec before stopping purposefully the program
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(AStar.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        runAlgo = AStar.aStarAlgorithm(showAlgorithmSteps);
                     }
-                    System.out.println(AStar.getListOfParent().size());
                     JOptionPane.showMessageDialog(main.getGui().getGui(), "Path has been found !", "Info", JOptionPane.PLAIN_MESSAGE);
                 } catch (IndexOutOfBoundsException d) {
                     JOptionPane.showMessageDialog(main.getGui().getGui(), "Path not found, please reset the grid", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -137,6 +116,10 @@ public class MySwingWorker {
 
     public ArrayList<Node> getOpenSet() {
         return openSet;
+    }
+
+    public void setShowAlgorithmSteps(boolean showAlgorithmSteps) {
+        this.showAlgorithmSteps = showAlgorithmSteps;
     }
 
 }

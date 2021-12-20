@@ -5,11 +5,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -64,18 +64,20 @@ public class GUI {
     private JMenuItem changeMatrixSize;
     private JMenuItem screenShot;
     private final Color defaultButtonColor;
+    private JMenuItem showSteps;
 
     public GUI() {
 
         this.listOfAll = new ArrayList<>();
         this.guiMenuBarListener = new GuiMenuBarListener();
-        this.matrixSize = 20;
+        this.matrixSize = 50;
         this.allowDrawing = true;
 
         gui = new JFrame("Pathfinding A*");
         gui.setLayout(new BorderLayout());
         gui.setSize(new Dimension(1300, 800));
         gui.setLocationRelativeTo(null);
+        gui.setMinimumSize(new Dimension(800, 600));
 
         contentPanel = new JPanel();
 
@@ -116,6 +118,8 @@ public class GUI {
         screenShot.addActionListener(this.guiMenuBarListener);
         changeMatrixSize = new JMenuItem("Change Grid Size");
         changeMatrixSize.addActionListener(this.guiMenuBarListener);
+        showSteps = new JMenuItem("Show the algorithm steps");
+        showSteps.addActionListener(this.guiMenuBarListener);
         howToDraw = new JMenuItem("How to draw");
         howToDraw.addActionListener(this.guiMenuBarListener);
 
@@ -126,6 +130,7 @@ public class GUI {
         recordMenu.add(stopRecord);
         recordMenu.add(screenShot);
         windowMenu.add(changeMatrixSize);
+        windowMenu.add(showSteps);
         helpMenu.add(howToDraw);
 
         menuBar.add(fileMenu);
@@ -260,18 +265,18 @@ public class GUI {
     }
 
     public void paintStartNode(Node startButton) {
-        startButton.getNode().setBackground(Color.CYAN);
+        startButton.getNode().setBackground(Color.RED);
     }
 
     public void paintEndNode(Node endButton) {
-        endButton.getNode().setBackground(Color.WHITE);
+        endButton.getNode().setBackground(Color.BLUE);
         endButton.getNode().setFocusPainted(false);
         endButton.getNode().setText(String.valueOf(main.getEndNodeCount()));
     }
 
     public void paintObstacles(Node obstacle, int width) {
         if (width == 1) {
-            obstacle.getNode().setBackground(new Color(165,13,51));
+            obstacle.getNode().setBackground(Color.LIGHT_GRAY);
         }
         for (int i = 0; i < this.listOfAll.size(); i++) {
             Node currentNode = main.getGui().getListOfAll().get(i);
@@ -279,9 +284,9 @@ public class GUI {
             int potentialCol = Math.abs(obstacle.getColumn() - currentNode.getColumn());
 
             if (width == 2 && ((potentialRow == 1 && potentialCol == 0) || (potentialRow == 0 && potentialCol == 1))) {
-                currentNode.getNode().setBackground(new Color(165,13,51));
+                currentNode.getNode().setBackground(Color.LIGHT_GRAY);
                 currentNode.setObstacles(true);
-                obstacle.getNode().setBackground(new Color(165,13,51));
+                obstacle.getNode().setBackground(Color.LIGHT_GRAY);
             }
 
             if (width == 3 && ((potentialRow == 2 && potentialCol == 0)
@@ -290,8 +295,8 @@ public class GUI {
                     || (potentialRow == 0 && potentialCol == 1)
                     || (potentialRow == 1 && potentialCol == 1))) {
                 currentNode.setObstacles(true);
-                currentNode.getNode().setBackground(new Color(165,13,51));
-                obstacle.getNode().setBackground(new Color(165,13,51));
+                currentNode.getNode().setBackground(Color.LIGHT_GRAY);
+                obstacle.getNode().setBackground(Color.LIGHT_GRAY);
             }
         }
     }
@@ -342,10 +347,6 @@ public class GUI {
 
     public JFrame getGui() {
         return gui;
-    }
-
-    public Node getNode() {
-        return node;
     }
 
     public JRadioButton getGenerateObstacles() {
@@ -420,12 +421,12 @@ public class GUI {
         this.matrixSize = matrixSize;
     }
 
-    public JPanel getActionPanel() {
-        return actionPanel;
-    }
-
     public JMenu getWindowMenu() {
         return windowMenu;
+    }
+
+    public JMenuItem getShowSteps() {
+        return showSteps;
     }
 
 }
