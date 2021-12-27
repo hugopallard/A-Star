@@ -143,41 +143,47 @@ public class AStar {
             RetracePath(startNode, endNode);
             return false;
         } else {
-            // Create the neighbourS of the current node
-            neighbourCreation(current);
-            // Loop through the neighbours
-            for (int i = 0; i < neighbours.size(); i++) {
-                // Attribute to the field currentNeighbour the value of the neighbour from neighbours being evaluated
-                Node currentNeighbour = neighbours.get(i);
-                // If neighbour is not traversable of neighbour is in closedList we skip to the next iteration.
-                if (closedList.contains(currentNeighbour) || currentNeighbour.isObstacles() == true) {
-                    continue;
-                }
-                int new_path = current.getG_cost() + GetDistance(current, currentNeighbour);
+            try {
+                // Create the neighbourS of the current node
+                neighbourCreation(current);
+                // Loop through the neighbours
+                for (int i = 0; i < neighbours.size(); i++) {
+                    // Attribute to the field currentNeighbour the value of the neighbour from neighbours being evaluated
+                    Node currentNeighbour = neighbours.get(i);
+                    // If neighbour is not traversable of neighbour is in closedList we skip to the next iteration.
+                    if (closedList.contains(currentNeighbour) || currentNeighbour.isObstacles() == true) {
+                        continue;
+                    }
+                    int new_path = current.getG_cost() + GetDistance(current, currentNeighbour);
 
-                // If the new path to the neighbour is shorter or neighbour is not in openList then
-                if (new_path < currentNeighbour.getG_cost() || !openList.contains(currentNeighbour)) {
+                    // If the new path to the neighbour is shorter or neighbour is not in openList then
+                    if (new_path < currentNeighbour.getG_cost() || !openList.contains(currentNeighbour)) {
 
-                    // I set the f_cost, g_cost and h_cost of the currentNeighbour
-                    currentNeighbour.setG_cost(new_path);
-                    currentNeighbour.setH_cost(GetDistance(currentNeighbour, endNode));
-                    currentNeighbour.setF_cost(currentNeighbour.getG_cost() + currentNeighbour.getH_cost());
-                    currentNeighbour.setParent(current);
-                    // For visual
+                        // I set the f_cost, g_cost and h_cost of the currentNeighbour
+                        currentNeighbour.setG_cost(new_path);
+                        currentNeighbour.setH_cost(GetDistance(currentNeighbour, endNode));
+                        currentNeighbour.setF_cost(currentNeighbour.getG_cost() + currentNeighbour.getH_cost());
+                        currentNeighbour.setParent(current);
+                        // For visual
 //                    currentNeighbour.getNode().setText(String.valueOf(currentNeighbour.getF_cost() + "," + currentNeighbour.getG_cost() + "," + currentNeighbour.getH_cost()));
-                    if (!openList.contains(currentNeighbour)) {
-                        openList.add(currentNeighbour);
-                    }
-                    if (showAlgorithmSteps && currentNeighbour != endNode && "".equals(currentNeighbour.getNode().getText())) {
-                        currentNeighbour.getNode().setBackground(Color.green);
-                    }
-                    if (showAlgorithmSteps && current != startNode && "".equals(current.getNode().getText())) {
-                        current.getNode().setBackground(Color.yellow);
-                    }
+                        if (!openList.contains(currentNeighbour)) {
+                            openList.add(currentNeighbour);
+                        }
+                        if (showAlgorithmSteps && currentNeighbour != endNode && "".equals(currentNeighbour.getNode().getText())) {
+                            currentNeighbour.getNode().setBackground(Color.green);
+                        }
+                        if (showAlgorithmSteps && current != startNode && "".equals(current.getNode().getText())) {
+                            current.getNode().setBackground(Color.yellow);
+                        }
 
+                    }
                 }
+                Thread.sleep(5);
+                neighbours.clear();
+
+            } catch (InterruptedException ex) {
+                Logger.getLogger(AStar.class.getName()).log(Level.SEVERE, null, ex);
             }
-            neighbours.clear();
             return true;
         }
     }
@@ -198,11 +204,16 @@ public class AStar {
 
             if ("".equals(pathMember.getText())) {
                 pathMember.setBackground(Color.CYAN);
+                try {
+                    Thread.sleep(2);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(AStar.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-            if (endNode.getNode().getText().equals(pathMember.getText()) == false) {
-                pathMember.setText(endNode.getNode().getText() + "," + pathMember.getText());
-                pathMember.setToolTipText(pathMember.getText());
-            }
+//            if (endNode.getNode().getText().equals(pathMember.getText()) == false) {
+//                pathMember.setText(endNode.getNode().getText() + "," + pathMember.getText());
+//                pathMember.setToolTipText(pathMember.getText());
+//            }
         }
     }
 

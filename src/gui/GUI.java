@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.ButtonGroup;
@@ -276,7 +275,7 @@ public class GUI {
 
     public void paintObstacles(Node obstacle, int width) {
         if (width == 1) {
-            obstacle.getNode().setBackground(Color.LIGHT_GRAY);
+            obstacle.getNode().setBackground(Color.GRAY);
         }
         for (int i = 0; i < this.listOfAll.size(); i++) {
             Node currentNode = main.getGui().getListOfAll().get(i);
@@ -284,9 +283,9 @@ public class GUI {
             int potentialCol = Math.abs(obstacle.getColumn() - currentNode.getColumn());
 
             if (width == 2 && ((potentialRow == 1 && potentialCol == 0) || (potentialRow == 0 && potentialCol == 1))) {
-                currentNode.getNode().setBackground(Color.LIGHT_GRAY);
+                currentNode.getNode().setBackground(Color.GRAY);
                 currentNode.setObstacles(true);
-                obstacle.getNode().setBackground(Color.LIGHT_GRAY);
+                obstacle.getNode().setBackground(Color.GRAY);
             }
 
             if (width == 3 && ((potentialRow == 2 && potentialCol == 0)
@@ -295,8 +294,8 @@ public class GUI {
                     || (potentialRow == 0 && potentialCol == 1)
                     || (potentialRow == 1 && potentialCol == 1))) {
                 currentNode.setObstacles(true);
-                currentNode.getNode().setBackground(Color.LIGHT_GRAY);
-                obstacle.getNode().setBackground(Color.LIGHT_GRAY);
+                currentNode.getNode().setBackground(Color.GRAY);
+                obstacle.getNode().setBackground(Color.GRAY);
             }
         }
     }
