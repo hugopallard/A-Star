@@ -26,15 +26,13 @@ public class GuiMenuBarListener implements ActionListener {
         if (e.getSource() == main.getGui().getChangeMatrixSize()) {
             try {
                 main.getGui().getStartAlgorithmButton().setEnabled(false);
-                main.getGui().getGenerateRandomGrid().setEnabled(false);
                 int newGridSize = Integer.parseInt(JOptionPane.showInputDialog(main.getGui().getGui(), "Enter the new grid size:", main.getGui().getMatrixSize()));
                 main.getGui().setMatrixSize(newGridSize);
                 main.getGui().getContentPanel().removeAll();
-                main.getGui().getGui().repaint();
                 main.getGui().createNodes(newGridSize);
                 main.getGui().getGui().revalidate();
+                main.getGui().getGui().repaint();
                 main.getGui().getStartAlgorithmButton().setEnabled(true);
-                main.getGui().getGenerateRandomGrid().setEnabled(true);
             } catch (NumberFormatException n) {
                 System.out.println("Entrez un entier");
             }

@@ -37,11 +37,9 @@ public class GUI {
     private int matrixSize;
     private final ArrayList<Node> listOfAll;
     private boolean allowDrawing;
-    private Node node;
     private final GuiMenuBarListener guiMenuBarListener;
     private JButton startAlgorithmButton;
     private JButton resetGrid;
-    private JButton generateRandomGrid;
     private JLabel tittleLabel;
     private JRadioButton generateObstacles;
     private JRadioButton chooseStartPos;
@@ -62,12 +60,14 @@ public class GUI {
     private JMenuItem stopRecord;
     private JMenuItem changeMatrixSize;
     private JMenuItem screenShot;
-    private final Color defaultButtonColor;
     private JMenuItem showSteps;
+    private JButton generateRandomGrid;
+    private final ArrayList<Node> obstaclesList;
 
     public GUI() {
 
         this.listOfAll = new ArrayList<>();
+        this.obstaclesList = new ArrayList<>();
         this.guiMenuBarListener = new GuiMenuBarListener();
         this.matrixSize = 50;
         this.allowDrawing = true;
@@ -83,8 +83,6 @@ public class GUI {
         menuBar();
         controlPanel();
         createNodes(matrixSize);
-
-        this.defaultButtonColor = resetGrid.getBackground();
         gui.add(contentPanel, BorderLayout.CENTER);
         gui.setVisible(true);
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -180,6 +178,7 @@ public class GUI {
         chooseEndPos = new JRadioButton("Choose ending pos");
         chooseEndPos.setBackground(Color.DARK_GRAY);
         chooseEndPos.setFocusPainted(false);
+        chooseEndPos.setEnabled(false);
         chooseEndPos.setForeground(Color.WHITE);
 
         optionGroup = new ButtonGroup();
@@ -238,92 +237,56 @@ public class GUI {
         contentPanel.setBackground(Color.DARK_GRAY);
         for (int i = 0; i < matrixSize; i++) {
             for (int j = 0; j < matrixSize; j++) {
-                node = new Node(i, j);
+                Node node = new Node(i, j);
                 listOfAll.add(node);
-                contentPanel.add(node.getNode());
+                contentPanel.add(node.getPathEntity());
             }
         }
     }
 
-    // Called only when the generate a random grid button is clicked
-    public void generateObstacles(Node start, Node end, Random rd) {
+    public void paintNode(Node startButton, Color color) {
+        startButton.getPathEntity().setBackground(color);
+    }
+
+    public void paintObstacles(Node obstacle, int width, Color color) {
+        if (width == 1) {
+            obstacle.getPathEntity().setBackground(color);
+        }
+        Node currentNode;
+        int potentialRow;
+        int potentialCol;
+        for (int i = 0; i < this.listOfAll.size(); i++) {
+            currentNode = main.getGui().getListOfAll().get(i);
+            potentialRow = Math.abs(obstacle.getRow() - currentNode.getRow());
+            potentialCol = Math.abs(obstacle.getColumn() - currentNode.getColumn());
+
+            if (width == 2 && ((potentialRow == 1 && potentialCol == 0) || (potentialRow == 0 && potentialCol == 1))) {
+                currentNode.getPathEntity().setBackground(color);
+                obstaclesList.add(currentNode);
+                obstacle.getPathEntity().setBackground(color);
+            }
+
+            if (width == 3 && ((potentialRow == 2 && potentialCol == 0)
+                    || (potentialRow == 0 && potentialCol == 2)
+                    || (potentialRow == 1 && potentialCol == 0)
+                    || (potentialRow == 0 && potentialCol == 1)
+                    || (potentialRow == 1 && potentialCol == 1))) {
+                obstaclesList.add(currentNode);
+                currentNode.getPathEntity().setBackground(color);
+                obstacle.getPathEntity().setBackground(color);
+            }
+        }
+    }
+
+    public void generateObstacles() {
+        Random rd = new Random();
+        int selected;
         int numberOfObstacles = rd.nextInt(listOfAll.size() - 50) + 10;  //between 10 and gridsize-50 obstacles
-        ArrayList<Node> obstacles = new ArrayList<>(numberOfObstacles);
         System.out.println("Nombre d'obstacles:" + numberOfObstacles);
         for (int i = 0; i < numberOfObstacles; i++) {
-            Random rand = new Random();
-            int obstacle = rand.nextInt(listOfAll.size());
-            while (listOfAll.get(obstacle) == start || listOfAll.get(obstacle) == end) {
-                obstacle = rand.nextInt(listOfAll.size());
-            }
-            // Found a available position for an ostacle (which is not the start or the end node)
-            obstacles.add(i, listOfAll.get(obstacle));
-            obstacles.get(i).setObstacles(true);
-            paintObstacles(obstacles.get(i), 1);
-        }
-    }
-
-    public void paintStartNode(Node startButton) {
-        startButton.getNode().setBackground(Color.RED);
-    }
-
-    public void paintEndNode(Node endButton) {
-        endButton.getNode().setBackground(Color.BLUE);
-        endButton.getNode().setFocusPainted(false);
-        endButton.getNode().setText(String.valueOf(main.getEndNodeCount()));
-    }
-
-    public void paintObstacles(Node obstacle, int width) {
-        if (width == 1) {
-            obstacle.getNode().setBackground(Color.GRAY);
-        }
-        for (int i = 0; i < this.listOfAll.size(); i++) {
-            Node currentNode = main.getGui().getListOfAll().get(i);
-            int potentialRow = Math.abs(obstacle.getRow() - currentNode.getRow());
-            int potentialCol = Math.abs(obstacle.getColumn() - currentNode.getColumn());
-
-            if (width == 2 && ((potentialRow == 1 && potentialCol == 0) || (potentialRow == 0 && potentialCol == 1))) {
-                currentNode.getNode().setBackground(Color.GRAY);
-                currentNode.setObstacles(true);
-                obstacle.getNode().setBackground(Color.GRAY);
-            }
-
-            if (width == 3 && ((potentialRow == 2 && potentialCol == 0)
-                    || (potentialRow == 0 && potentialCol == 2)
-                    || (potentialRow == 1 && potentialCol == 0)
-                    || (potentialRow == 0 && potentialCol == 1)
-                    || (potentialRow == 1 && potentialCol == 1))) {
-                currentNode.setObstacles(true);
-                currentNode.getNode().setBackground(Color.GRAY);
-                obstacle.getNode().setBackground(Color.GRAY);
-            }
-        }
-    }
-
-    public void unpaintObstacles(Node obstacle, int width) {
-        if (width == 1) {
-            obstacle.getNode().setBackground(this.defaultButtonColor);
-        }
-        for (int i = 0; i < this.listOfAll.size(); i++) {
-            Node currentNode = main.getGui().getListOfAll().get(i);
-            int potentialRow = Math.abs(obstacle.getRow() - currentNode.getRow());
-            int potentialCol = Math.abs(obstacle.getColumn() - currentNode.getColumn());
-
-            if (width == 2 && ((potentialRow == 1 && potentialCol == 0) || (potentialRow == 0 && potentialCol == 1))) {
-                currentNode.getNode().setBackground(this.defaultButtonColor);
-                currentNode.setObstacles(false);
-                obstacle.getNode().setBackground(this.defaultButtonColor);
-            }
-
-            if (width == 3 && ((potentialRow == 2 && potentialCol == 0)
-                    || (potentialRow == 0 && potentialCol == 2)
-                    || (potentialRow == 1 && potentialCol == 0)
-                    || (potentialRow == 0 && potentialCol == 1)
-                    || (potentialRow == 1 && potentialCol == 1))) {
-                currentNode.setObstacles(false);
-                currentNode.getNode().setBackground(this.defaultButtonColor);
-                obstacle.getNode().setBackground(this.defaultButtonColor);
-            }
+            selected = rd.nextInt(listOfAll.size());
+            obstaclesList.add(listOfAll.get(selected));
+            paintObstacles(listOfAll.get(selected), 1, Color.GRAY);
         }
     }
 
@@ -338,10 +301,6 @@ public class GUI {
 
     public JButton getResetGrid() {
         return resetGrid;
-    }
-
-    public JButton getGenerateRandomGrid() {
-        return generateRandomGrid;
     }
 
     public JFrame getGui() {
@@ -426,6 +385,14 @@ public class GUI {
 
     public JMenuItem getShowSteps() {
         return showSteps;
+    }
+
+    public JButton getGenerateRandomGrid() {
+        return generateRandomGrid;
+    }
+
+    public ArrayList<Node> getObstaclesList() {
+        return obstaclesList;
     }
 
 }
