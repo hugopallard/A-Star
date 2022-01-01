@@ -1,16 +1,13 @@
 package main;
 
-// Java program to illustrate
-// working of MySwingWorker
 import gui.GUI;
 import render.MySwingWorker;
 
 public class main {
 
-    private static AStar AStar;
     private static GUI gui;
-    private static int endNodeCount;
     private static MySwingWorker swingWorker;
+    private static int AStarInstanceNumber;
 
     public static void start() {
         gui.getWindowMenu().setEnabled(false);
@@ -21,13 +18,12 @@ public class main {
         gui.getChooseEndPos().setEnabled(false);
         gui.getResetGrid().setEnabled(true);
         gui.getStartAlgorithmButton().setEnabled(false);
-        gui.getGenerateRandomGrid().setEnabled(false);
         swingWorker.getSw1().execute();
         swingWorker = new MySwingWorker();
     }
 
     public static void main(String[] args) {
-        endNodeCount = 0;
+        AStarInstanceNumber = -1;
         gui = new GUI();
         swingWorker = new MySwingWorker();
     }
@@ -36,24 +32,16 @@ public class main {
         return gui;
     }
 
-    public static int getEndNodeCount() {
-        return endNodeCount;
-    }
-
-    public static void setEndNodeCount(int endNodeCount) {
-        main.endNodeCount = endNodeCount;
-    }
-
     public static MySwingWorker getSwingWorker() {
         return swingWorker;
     }
 
-    public static AStar getAStar() {
-        return AStar;
+    public static int getAStarInstanceNumber() {
+        return AStarInstanceNumber;
     }
 
-    public static void setSwingWorker(MySwingWorker swingWorker) {
-        main.swingWorker = swingWorker;
+    public static void setAStarInstanceNumber(int AStarInstanceNumber) {
+        main.AStarInstanceNumber = AStarInstanceNumber;
     }
 
 }

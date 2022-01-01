@@ -6,40 +6,30 @@ import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.KeyStroke;
 
-public class Node implements Comparable<Node> {
+public class Node {
 
-    private final JButton node;
+    private final JButton pathEntity;
     private int f_cost;
     private int g_cost;
     private int h_cost;
     private int row;
     private int column;
-    private boolean Obstacles;
     private final GuiKeyBinding keyBinding;
     private Node parent;
 
     public Node(int row, int column) {
-        node = new JButton();
+        pathEntity = new JButton();
         keyBinding = new GuiKeyBinding();
-        g_cost = 0;
-        h_cost = 0;
-        this.f_cost = g_cost + h_cost;
         this.row = row;
         this.column = column;
-        this.Obstacles = false;
-        node.addMouseListener(new GuiMouseListener());
-        node.setBackground(Color.WHITE);
-        node.setBorderPainted(false);
-        node.getInputMap().put(KeyStroke.getKeyStroke("S"), "allowDrawing");
-        node.getActionMap().put("allowDrawing", keyBinding.getAllowDrawingAction());
-        node.getInputMap().put(KeyStroke.getKeyStroke("D"), "stopDrawing");
-        node.getActionMap().put("stopDrawing", keyBinding.getStopDrawingAction());
-    }
-
-    @Override
-    public int compareTo(Node o) {
-        // On trie la liste selon les f_cost
-        return this.f_cost - o.f_cost;
+        pathEntity.addMouseListener(new GuiMouseListener());
+        pathEntity.setBackground(Color.WHITE);
+        pathEntity.setFocusPainted(false);
+        pathEntity.setBorderPainted(false);
+        pathEntity.getInputMap().put(KeyStroke.getKeyStroke("S"), "allowDrawing");
+        pathEntity.getActionMap().put("allowDrawing", keyBinding.getAllowDrawingAction());
+        pathEntity.getInputMap().put(KeyStroke.getKeyStroke("D"), "stopDrawing");
+        pathEntity.getActionMap().put("stopDrawing", keyBinding.getStopDrawingAction());
     }
 
     @Override
@@ -47,16 +37,13 @@ public class Node implements Comparable<Node> {
         return "F_cost:" + f_cost + ", G_cost:" + g_cost + ", H_cost" + h_cost;
     }
 
-    public JButton getNode() {
-        return node;
+    public void copy(Node o) {
+        this.row = o.getRow();
+        this.column = o.getColumn();
     }
 
-    public boolean isObstacles() {
-        return Obstacles;
-    }
-
-    public void setObstacles(boolean Obstacles) {
-        this.Obstacles = Obstacles;
+    public JButton getPathEntity() {
+        return pathEntity;
     }
 
     public int getRow() {
@@ -106,5 +93,5 @@ public class Node implements Comparable<Node> {
     public void setColumn(int column) {
         this.column = column;
     }
-    
+
 }
